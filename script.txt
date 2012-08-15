@@ -1,81 +1,148 @@
-Hello, I'm Ryan and today I'm going to talk about *testing*.
+Hello, I'm Ryan and today I'm going to talk about testing.
 
-Who here loves writing tests?  And who here an barely bring themselves to type the words "def test" into their code one more time?
+Who here loves writing tests?  And who here can barely bring themselves to type the words "def test" into their code one more time?
 
-Good good.  I don't fit either of those extremes either.  But my position on this line does fluctuate considerably over time.  On a new project or with some new code, writing tests can actually be quite fun.  They're easy to come up with, you will probably find and fix some bugs, and in general it feels *productive*.  But over time, the experience loses its luster and it's easy to feel like you're just walking uphill for no good reason.
+Good good.  I don't fit either of those extremes either.  But my position on this line does fluctuate considerably over time.  On a new project or with some new code, writing tests can actually be quite fun.  They're easy to come up with, you will probably find and fix some bugs, and in general it feels *productive*.  But over time, the experience loses its lustre and it's easy to feel like you're just walking uphill for no good reason.
 
 This is a very general phenomenon in Quality Assurance activities, and it is all the fault of this graph.
 
-Well, not this *specific* graph, but one very much like it.  This is a genric graph of effort expended vs quality obtained.  Depending on who you are and what you're doing, you will be interested in some variation of this graph.  If you're a bean counter, you might care about dollars spend on salary vs number of user complaints.  Most people here probably care about number of tests written vs bugs-per-line-of-code.  But whatever the case, it'll look something like this.
+Well, not this *specific* graph, but one very much like it.  This is a generic graph of effort expended vs quality obtained.  Depending on who you are and what you're doing, you will be interested in some variation of this graph.  If you're a corporate bean counter, you might care about dollars spend on salary vs number of user complaints.  Most people here probably care about number of tests written vs bugs-per-line-of-code.  But whatever your metrics, the graph will probably be shaped something like this.
 
-So, look at this graph: how do we increase quality?  The obvious thing to do is expend more effort, and to begin with this will work really well.  If you're starting with low quality, expending a small amount of error will result in a significant and satisfying increase in quality.  But expending the same amount of additional effort again will produce less significant results.  And so on, and so on, until at some point the marginal increase in quality it outweighed by the ridiculous amount of effort required to obtain it.  Classic Law of Diminishing Returns.
+The thing we're interested in is maximising quality, so looking at this graph, how do we do it?  The obvious thing to do is expend more effort, and to begin with this will work really well.  If you're starting right down here at the low end, expending a small amount of effort will result in a significant and satisfying increase in quality.  But expending the same amount of additional effort again will produce less significant results.  And so on, and so on, until at some point the marginal increase in quality it outweighed by the ridiculous amount of effort required to obtain it.  Classic Law of Diminishing Returns.
 
 Fortunately, there is something else we can do.  We can put on our engineer's hats and hack this graph, change the slope of this line so that we can extract more quality by expending the same amount of effort.  That's what I want to talk to you about today.
 
 Obviously, there is no free lunch here.  You're never going to hack this curve into a straight line.  And the process of changing this curve is in itself an expenditure of effort.  But I think it's a useful way to think about the activity of quality assurance in general, and about testing in particular.  Do more with less.  Work smarter not harder.
 
-What I really want to advocate today is one of the great virtues of, well, of life in general, but in particular of the engineer: laziness.  Not a directionless kind of slacking-off laziness, but a purposeful quest to expend the least amount of effort while obtaining the most results.  It's about pro-active laziness.
+What I really want to advocate today is one of the great virtues of, well, of life in general, but in particular of the engineer: laziness.  Not a direction-less kind of slacking-off laziness, but a purposeful quest to expend the least amount of effort while obtaining the most results.  It's about pro-active laziness.  Not the minimisation of effort, but the maximisation of the benefit-to-effort ratio.
 
-If this doesn't sound quite right to you, that's OK, we're accustomed to thinking of laziness as slacking off.  I can recommend a good book on the topic if you want to read more about the virtues of pro-active laziness, the one which first exposed me to this idea.  You've probably heard of it as it's one of the classics of moder philosophy:  Terry Pratchet's Discworld Novel "Moving Pictures".  The male protaganist in this book is so lazy, and so dedicated to the practice of laziness, that he XXX TODO FILL THIS IN TODO XXX.  I think this is a most admirable quality, and I want to talk about applying it to Testing Your Web API.
+The important of this particular brand of laziness was really brought home to me by a book I read recently.  You've probably heard of it as it's one of the classics of modern philosophy:  Terry Pratchet's Discworld Novel "Moving Pictures".  The male protagonist in this book is so lazy, and so dedicated to the practice of laziness, that he was said to put more effort into avoiding work than most people put into hard labour.  He would work out regularly because he'd calculated that the extra effort expended on keeping fit would be more than offset by the *reduced* effort of going about his day while in good shape.
 
-So, about me.  For around a year now I've been working for Mozilla, which you might have guessed from the jumper, and from the fact that I'm using Firefox as my presentation sofware.  I'm part of the Services team and our job is to build and run high-performance web APIs to make your Firefox Experience better.  Our biggest product at the moment is the server-side component of Firefox Sync.  The sync client has lots of fancy logic and crypto and stuff, but the sync server is conceptually very simple, so I'm going to use a stripped-down version of it as examples for today.  The real thing is open-source and available here.
+I bring this up onl semi-tongue-in-cheek.  I think this kind of pro-active laziness is an admirable quality, and I want to talk about applying it to Testing Your Web API.
 
-XXX TODO need a minimal pyramid syncserver app TODO XXX
+So, about me.  For around a year now I've been working for Mozilla, which you might have guessed from the jumper, and from the fact that I'm using Firefox as my presentation software.  I'm part of the Services team and our job is to build and run high-performance web APIs to make your Firefox Experience better.  Our biggest product at the moment is the server-side component of Firefox Sync and pretty much all of our stuff is available online at these URLs.
 
-We want to test this out.  You will probably have unittests that drive parts of your application.  You could do it like this using pyramids own testing framework.  XXX TODO write some pyramid-based tests TODO XXX.
+Basically, I want to show you three tools we use in our team and demonstrate how they can help you maximise the benefit-to-effort ratio.  Some of what I'll show you today is stuff we already do, some of it is ideas I have for making our setup better.
 
-These are pretty close to functional tests, you are testing the flow of data through your entire application.  So lets write them a little more generically.
 
 WebTest
 =======
 
-WebTest is a simple API for driving WSGI applications, and for making assertions about their behaviour.  I like it because it provides a natural-ish language for describing HTTP, but is still just python function calls.  Unlike e.g. mechanize or twill.
+WebTest is a simple API for driving WSGI applications, and for making assertions about their behaviour.
 
-XXX TODO something about the history TODO XXX
+Suppose we have a WSGI application like this trivial example.  It is just a python callable, so we can interact with it from python code to test its behaviour.  ** RUN THROUGH PURE WSGI SCRIPTED EXAMPLE ***
 
-You take a WSGI application, you wrap it up in a TestApp instance, and you drive it.  XXX TODO demo TODO XXX
+That is a pretty awful API for humans to use.  WebTest basically exists to clean this up.  You take a WSGI application, you wrap it up in a TestApp instance, and you drive it through simple method calls.  ** RERUN THROUGH EXAMPLE WITH WEBTEST **
 
-So lets record some tests like that.  XXX TODO write some unittests TODO XXX
+XXX TODO used in pylons? turbogears?  TODO XXX
 
-You can do more complicated things as well, like cookies and forms XXX TODO examples TODO XXX
+To make this a little more concrete, I have here a very simple little demo app that's inspired by the firefox sync server.  The code is not that important.  You can post JSON objects to a collection, you can query for changes made by others, and you can delete them.  I am going to describe the actual behaviour to you while writing testcases for it.  So here we go.
 
-What's nice is that this is quite simple and lightweight.  Look at the timing compared to using pyramid's own testing framework.  There is more overhead, but really not that much more.  These are still fast, fast enough to be run as part of your regular test suite.  But what we've achieved is splitting them out behind a generic API.  They are basically talking HTTP, not depending on any internal details of the application.  And by splitting them out like this, we have opened up some interesting possibilities.
+Oh, by the way, despite typing the name "unittest" in there, these are definitely not unittests.  They're more like functional or integration tests
+because they involve pretty much the entire stack of your application.  You could argue about where exactly they git into the canonical taxonomy of test types, or you could just get on with writing them.
+
+To begin, we're going to obtain our WSGI application and wrap it in a TestApp instance.  I'm doing this in a separate method for future extensibility.  We're then going to select a random username for our tests and we're going to delete all their stuff to make sure we're starting from a clean slate.
+
+Now the simplest operation is: we post some objects up to the collection, and then we can read them back again.  Done, that's a test case for our application.
+
+WebTest also provides some handy shortcuts, particularly if you're working with JSON.  For example, there is a "post_json" method that takes
+care of serialising the data and setting the headers.  And the response object has a "json" attribute for reading json responses.  These are baked into webtest, but if they weren't you could very easily create a custom subclass with whatever shortcuts you need.
+
+To get a little more complicated, we can post some objects and then query for only those objects that have been modified after a certain time.  And so on.
+
+You can imagine fleshing this out with a bunch of little demo behaviours that describe the shape of your web API.  Now if I drop out of the editor and run these tests, you can see that...ah, we have an error.  Which is of course there on purpose, because it shows you one of the nice features of WebTest.  It automatically checks response codes and fails if something unexpected happens.
+
+So this is good, we have some good test coverage already.  And if I hadn't already debugged this app, we might well have found some actual errors.
+Let's fix that up, and for good measure, add a test that unknown URLs do in fact produce a 404 response.
+
+In real life, you will want to do more complicated things.  For example, you may need to authenticate to the service, so in our setUp function
+we could set the Authorization header with appropriate credentials and this will be used for all requests.  It has facilities for the usual stuff like handling cookies and submitting forms.
+
+Now, my example application here is a Pyramid app, and Pyramid comes with its own framework for testing your views.  I just want to point out that building tests in this manner adds some overhead, but it's not too bad.  They're not spinning up servers, they're not talking to the network, all your tests are running in-process by just calling some python code.  They're likely fast enough to be run as part of your regular test suite. 
+
+But what we've achieved is splitting them out behind a generic API.  They are basically talking HTTP, not depending on any internal details of the application.  And by splitting them out like this, we have opened up some interesting possibilities.
+
 
 WSGIProxy
 =========
 
-WSGIProxy is basically the reverse of a WSGI server.  The job of a WSGI Server like gunicorn or paster is to take a HTTP request and convert it into a function call in python.  WSGIProxy takes a function call in python and turns it into a live HTTP request.
+WSGIProxy is basically the reverse of a WSGI server.
+
+The job of a WSGI Server like gunicorn or paster is to take a HTTP request and convert it into a function call in python.  WSGIProxy takes a function call in python and turns it into a live HTTP request.
 
 Diagram:    HTTP --> WSGI
             WSGI --> HTTP
 
-So you can make any live website look like a WSGI application callable.  And we already have WebTest, which is an API for driving WSGI callables.  Put them together, and we have an API for driving live websites.  The implications immediately present themselves.
+So you can make any live website look like a WSGI application callable.  And we already have WebTest, which is an API for driving WSGI callables.  Put them together, and we have an API for driving live websites.
 
-At the bottom of my unittest file, I am going to add a __main__ section.  When you run this as a script, it subclasses from our test suite and used WSGIProxy to direct those same tests against a live server.  That's it, just a handful of lines of code.  What I have just created is an acceptance and deployment test suite that you can run against your actual live application.  For free.
+** SCRIPTED INTERACTION WITH google.com **
 
-Now you may wonder, is this useful in practice?  If your WSGI application works correctly, then surely the deployed application will work correctly as well!  Not necessarily.  There are more layers, and more chances for things to go wrong.  E.g. different ways of ready the request body, header re-writing due to proxies, a different database setup, etc  XXX TODO more examples here TODO XXX.  This gives you an easy way to confirm that nothing went wrong.
+The implications for testing immediately present themselves.
 
-If you had to build this as a separate tool, if you had to re-implement all of the tests that you've already written to use them in this new way, then I'd tell you it was a waste of time.  But this gives you a measurable increase in things covered by testing, at very little cost.  So I think it's a solid win.
+At the bottom of my unittest file, I am going to add a __main__ section.  When you run this as a script, it subclasses from our test suite and uses WSGIProxy to direct those same tests against a live server.  That's it, just a handful of lines of code.  What I have just created is an acceptance and deployment test suite that you can run against your actual live application.  For free.
 
-Here's one example of how it can be useful.  A few months ago now, there was an XSS vulnerability reported in one of our products.  Of course we put together a bugfix release and deloyed it as soon as possible.  But for one reason or another, after deployed the updated code to the servers, the webserver did not get restarted correctly.  So it *looked* as if the system had been updated, but it was still running old code.  This could easily have been overlooked.
+** SCRIPTED RUNNING AGAINST THE DEMO APP **
+
+Now you may wonder, is this useful in practice?  If your WSGI application works correctly, then surely the deployed application will work correctly as well!  Not necessarily.  There are more layers, and more chances for things to go wrong.  E.g. different ways of read the request body, header re-writing due to proxies, a different database setup, etc.  There is plenty of scope for little things to go wrong.
+
+Here's one example.  A few months ago now, there was an XSS vulnerability reported in one of our products.  Of course we put together a bugfix release and deloyed it as soon as possible.  But for one reason or another, after deployed the updated code to the servers, the webserver did not get restarted correctly.  So it *looked* as if the system had been updated, but it was still running old code.  This could easily have been overlooked.
 
 But, because it was a security bug, we had a functional test written to cover it.  Running the suite against our server after the deployment would have immediately detected the problem.
 
+If you had to build this as a separate tool, if you had to re-implement all of the tests that you've already written to use them in this new way, then I'd tell you it was a waste of time.  But this gives you a measurable increase in things covered by testing, at very little cost.  So I think it's a solid win.
+
 The fact is, things can go wrong.  It's nice to have another layer of assurance in place.
+
 
 FunkLoad
 ========
 
-Now we have something that can be used to exercise the live web application, you might can an idea: let's spin up a bunch of these and see how the application responds under load!  Which you can do, and it will certainly be interesting to see.  Run a bunch of instances of that script in a loop across several machines.
+Now we have something that can be used to exercise the live web application, another application presents itself: let's spin up a bunch of these and see how the application responds under load!  Which you can do, and it will certainly be interesting to see.  Run a bunch of instances of that script in a loop across several machines.
 
-But supposing something does fail under this load, what are you going to do about it.  You're not getting a lot of insight into the behaviour of the system.  So lets try to plug it in to something else.  FunkLoad.
+But supposing something does fail under this load, what are you going to do about it?  You're not getting a lot of insight into the behaviour of the system.  So lets try to plug it in to something else.  FunkLoad.
 
-FunkLoad is what we use at Mozilla Services.  It's certainly not the only choice, but it has good monitoring and reporting features.  XXX TODO show some graphs and reports TODO XXX.
+FunkLoad is a fairly complete loadtesting suite, and it's what we use at Mozilla Services.  It's certainly not the only choice, but it has good monitoring and reporting features which I'll demonstrate for you today.
 
-FunkLoad comes with its own API thanks to WebUnit, which is fine.  XXX TODO write example load test using native API TODO XXX.  We could go on like this.
+Being a full application, FunkLoad comes with its own API for writing testcases.  I'm going to demonstrate it, but as you can imagine I am not going to tolerate it for very long.  First we need to write the code for interacting with the service, which will look like this.
 
-But here we are, repeating ourselves.  We already have tests and it would be great to use them, so let's see what we can do.   XXX TODO show how to do it TODO XXX.
+** RUN SCRIPTED CREATION OF FUNKLOAD CODE **
+
+We also need to configure how FunkLoad will run, which is done in a separate file.
+
+** RUN SCRIPTED CREATION OF FUNKLOAD CONFIG FILE **
+
+Now we can run it.  Funkload lets you execute a single instance of your test, just to sanity check that everything is working correctly, which it is.  There is then a separate command for running a benchmarking suite.  ** RUNS IT **.  You can see that this produces an xml file with a complete log of the benching run, including details about each request, how long it took, whether it succeeded or failed, etc.
+
+FunkLoad lets you process this into a nice HTML report with graphs etc.  As you can see, we are not getting great performance out of this app.  Which is to be expected since it's running in the single-threaded wsgiref server and writing to an sqlite database.  But you get the idea.
+
+That's very nice, but it's more work than I would like.  We are repeating ourselves.  We already have a specification for the behaviour of our web API, and it would be great to just re-use it.  Fortunately, it does not require *too* much hackery.  First we need a little class called "everything", which is a set that claims to contain any item you ask it about.  Then we just write a little wrapper WSGI app.  This is very similar to WSGIProxy, when it's called, it translates the call so that it goes through FunkLoads own methods.
+
+Now we can import the tests we have already written, hook up our little piece of hacker, and we're done.  The WebTest test cases we defined are now available for use with FunkLoad.
+
+There is a lot of stuff to learn from here, I could easily fill an entire session talking about FunkLoad.  But let me show you two cool features to whet your appetite.
+
+First, FunkLoad has the ability to generate a "diff report" to compare performance between multiple runs of the suite.  For example, let me edit this sample app so that it uses an in-memory sqlite database rather than one stored on file.  ** RUN THE TESTS AGAIN **
+
+Then funkload lets us generate a report showing the performance difference between the two.  It looks like this.  As you might expect, that made a big difference!
+
+The second neat feature is the ability to distribute the tests across multiple machines.  This is very important, because you don't want to overload the resources on the test machine.  ** RUN SCRIPTED EXAMPLE ** 
 
 
+Summing Up
+==========
+
+Not about these specific tools.
+
+I've chosen them because I like them, I'm used to them.  I also think they let you get started really quickly, while still providing good extensibility for the more complex cases.
+
+But there are many other things you could do.  You could start with FunkLoad, then monkey-patch the standard library to send HTTP requests to an in-process WSGI app rather than to a live webserver.  That seems like an awful hack to me, but you can certainly do it.
+
+What I really want you to take away from this is the importance of seeking synergy in your tools.  I want to give you a taste of what's possible when you pay attention to the tools at your disposal and the interesting ways in which they might fit together.  You can get a lot of things for free, or pretty close to it.
+
+Example: fuzz testing.  You could get a full-stack fuzz-testing framework that you point at a HTTP server and let it do its thing.  Or, imaging we had something like WSGIFuzzer, a piece of middleware that intercepts WSGI calls and fuzzes them.  Then we could plug it into any of the layers of testing we talked about today.
+
+I want to close with some thanks to the folks on the Services team, particularly Tarek Ziade who got the ball rolling on a lot of this stuff in our codebase, and the James Bonacci who is my main QA guy and is always finding ways to break my stuff and encouraging me to make that easier.
+
+Thanks you, I hope I've shown you something useful or at least inspired a few useful thoughts.  Code is here.
 
 
