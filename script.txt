@@ -34,6 +34,8 @@ Suppose we have a WSGI application like this trivial example.  It is just a pyth
 
 That is a pretty awful API for humans to use.  WebTest basically exists to clean this up.  You take a WSGI application, you wrap it up in a TestApp instance, and you drive it through simple method calls.  ** RERUN THROUGH EXAMPLE WITH WEBTEST **
 
+I like the think of it a "WSGI For Humans".
+
 XXX TODO used in pylons? turbogears?  TODO XXX
 
 To make this a little more concrete, I have here a very simple little demo app that's inspired by the firefox sync server.  The code is not that important.  You can post JSON objects to a collection, you can query for changes made by others, and you can delete them.  I am going to describe the actual behaviour to you while writing testcases for it.  So here we go.
