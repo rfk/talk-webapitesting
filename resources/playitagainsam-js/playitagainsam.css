@@ -8,3 +8,8 @@ input.pias-overlay {
   position: absolute;
   opacity: 0;
 }
+
+body .pias-container iframe {
+  border: 1px solid black;
+  margin: 2px;
+}

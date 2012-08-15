@@ -133,6 +133,7 @@ PIAS.Player.prototype.loadEvents = function(events, cb) {
 
 
 PIAS.Player.prototype.dispatchNextEvent = function() {
+    console.log(["DISPATCH"]);
     var self = this;
     if(this.current_event >= this.events.length) {
         if(this.done_callback) {
@@ -154,6 +155,7 @@ PIAS.Player.prototype.dispatchNextEvent = function() {
 
 
 PIAS.Player.prototype.handleKeyPress = function(c) {
+    console.log(["KEYPRESS", c]);
     var self = this;
     if(this.current_event < this.events.length) {
         var event = this.events[this.current_event];
@@ -163,7 +165,6 @@ PIAS.Player.prototype.handleKeyPress = function(c) {
                 new PIAS.Terminal(this, function(err, term) {
                     self.terminals[event.term] = term;
                     self.resize();
-                    console.log("focussing overlay");
                     self.overlay[0].focus();
                     self.moveToNextEvent();
                 });
@@ -197,7 +198,10 @@ PIAS.Player.prototype.isWaypointChar = function(c) {
 PIAS.Player.prototype.moveToNextEvent = function() {
     var self = this;
     this.current_event += 1;
-    setTimeout(function() { self.dispatchNextEvent(); }, 0);
+    this.dispatchNextEvent();
+    // This seems like a good idea, but it results in slow typing
+    // because it means we have to wait for processing of pending key events.
+    //setTimeout(function() { self.dispatchNextEvent(); }, 0);
 }
 
 PIAS.Player.prototype.resize = function() {
@@ -224,7 +228,12 @@ PIAS.Terminal = function(player, cb) {
                   self.player.handleKeyPress(chars.charAt(j));
               }
           });
-          self.channel.bind("initialized", function(trans) {
+          self.channel.bind("initialized", function(trans, dims) {
+              // Resize the terminal so it's 80 by 24.
+              var incr_w = (80 - dims.terminalWidth) * dims.cursorWidth;
+              var incr_h = (24 - dims.terminalHeight) * dims.cursorHeight;
+              self.frame.width(self.frame.width() + incr_w);
+              self.frame.height(self.frame.height() + incr_h);
               cb(null, self);
           });
       }
@@ -233,6 +242,7 @@ PIAS.Terminal = function(player, cb) {
 
 
 PIAS.Terminal.prototype.write = function(data) {
+    console.log(["WRITE", data]);
     this.channel.notify({ method: "write", params: data });
 }
 

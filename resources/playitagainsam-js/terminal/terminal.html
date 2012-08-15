@@ -39,12 +39,30 @@
         onReady: function() {
             terminal = new VT100();
             terminal.keysPressed = function() {};
-            channel.notify({method: "initialized"});
+            channel.notify({
+              method: "initialized",
+              params: {
+                  cursorWidth: terminal.cursorWidth,
+                  cursorHeight: terminal.cursorHeight,
+                  terminalWidth: terminal.terminalWidth,
+                  terminalHeight: terminal.terminalHeight,
+              }
+            });
         }
       });
     channel.bind("write", function(trans, data) {
         if(terminal) {
             terminal.vt100(data);
+        }
+    });
+    channel.bind("focus", function(trans, data) {
+        if(terminal) {
+            terminal.focusCursor();
+        }
+    });
+    channel.bind("blur", function(trans, data) {
+        if(terminal) {
+            terminal.blurCursor();
         }
     });
 
