@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>Terminal</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <link rel="stylesheet" href="styles.css" type="text/css">
+    <style type="text/css">
+      body {
+        margin: 0px;
+      }
+    </style>
+    <script type="text/javascript"><!--
+      (function() {
+        // We would like to hide overflowing lines as this can lead to
+        // visually jarring results if the browser substitutes oversized
+        // Unicode characters from different fonts. Unfortunately, a bug
+        // in Firefox prevents it from allowing multi-line text
+        // selections whenever we change the "overflow" style. So, only
+        // do so for non-Netscape browsers.
+        if (typeof navigator.appName == 'undefined' ||
+            navigator.appName != 'Netscape') {
+          document.write('<style type="text/css">' +
+                         '#vt100 #console div, #vt100 #alt_console div {' +
+                         '  overflow: hidden;' +
+                         '}' +
+                         '</style>');
+        }
+      })();
+    --></script>
+    <script type="text/javascript" src="../jschannel.js"></script>
+    <script type="text/javascript" src="./vt100.js"></script>
+    <script type="text/javascript">
+    function extend(subClass, baseClass) {
+      function inheritance() { }
+      inheritance.prototype          = baseClass.prototype;
+      subClass.prototype             = new inheritance();
+      subClass.prototype.constructor = subClass;
+      subClass.prototype.superClass  = baseClass.prototype;
+    };
+
+
+    function Terminal(container) {
+      var self = this;
+      this.superClass.constructor.call(this, container);
+      this.channel = Channel.build({
+        window: window.parent,
+        origin: "*",
+        scope: "pias",
+      });
+      this.channel.bind("write", function(trans, data) {
+        self.vt100(data);
+      });
+    };
+
+    extend(Terminal, VT100);
+
+    Terminal.prototype.keysPressed = function(ch) {
+      this.channel.notify({method: "keysPressed", params: ch});
+    }
+    </script>
+  </head>
+  <body onload="setTimeout('new Terminal()', 100)" scroll="no">
+  </body>
+</html>
