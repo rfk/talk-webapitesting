@@ -187,9 +187,13 @@ PIAS.Player.prototype.handleKeyPress = function(c) {
             term.resize(event.size, moveToNextEvent);
         } else if(event.act == "READ") {
             if(this.isWaypointChar(c)) {
-                this.moveToNextEvent();
-            } else if (!this.isWaypointChar(event.data)) {
-                this.moveToNextEvent();
+                if (this.isWaypointChar(event.data)) {
+                    this.moveToNextEvent();
+                }
+            } else {
+                if (!this.isWaypointChar(event.data)) {
+                    this.moveToNextEvent();
+                }
             }
         }
     }
