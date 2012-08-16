@@ -10,7 +10,7 @@ from bottle import Bottle, request, response, run
 application = Bottle(catchall=False)
 
 
-db = sqlite3.connect(":memory:") #"/tmp/sync.db")
+db = sqlite3.connect("/tmp/sync.db")
 
 db.execute("CREATE TABLE IF NOT EXISTS items ("\
            "   username STRING NOT NULL, "\
