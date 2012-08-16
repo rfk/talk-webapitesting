@@ -81,4 +81,4 @@ def delete_collection(username, collection):
 
 
 if __name__ == "__main__":
-    run(application, host="localhost", port=8080)
+    run(application, host="192.168.0.3", port=8080)
