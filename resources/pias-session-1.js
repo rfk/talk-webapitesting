@@ -3,7 +3,7 @@ var pias_data = {
     {
       "act": "OPEN", 
       "term": "96d0f606a80947aea413b5637500cc9b",
-      "size": [60, 30]
+      "size": [80, 30]
     }, 
     {
       "act": "PAUSE", 
@@ -52,9 +52,14 @@ var pias_data = {
       "term": "96d0f606a80947aea413b5637500cc9b"
     }, 
     {
+      "act": "RESIZE", 
+      "term": "96d0f606a80947aea413b5637500cc9b",
+      "size": [80, 16]
+    }, 
+    {
       "act": "OPEN", 
       "term": "5ead92d692c14400b4e35fdea4443796",
-      "size": [60, 30]
+      "size": [80, 16]
     }, 
     {
       "act": "WRITE", 

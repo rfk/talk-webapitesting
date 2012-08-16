@@ -134,6 +134,7 @@ PIAS.Player.prototype.loadEvents = function(events, cb) {
 
 PIAS.Player.prototype.dispatchNextEvent = function() {
     var self = this;
+    var moveToNextEvent = function() { self.moveToNextEvent(); }
     if(this.current_event >= this.events.length) {
         if(this.done_callback) {
             this.done_callback(null);
@@ -142,8 +143,7 @@ PIAS.Player.prototype.dispatchNextEvent = function() {
     } else {
         var event = this.events[this.current_event];
         if (event.act == "PAUSE") {
-            setTimeout(function() { self.moveToNextEvent() },
-                       event.duration * 1000);
+            setTimeout(moveToNextEvent, event.duration * 1000);
         } else if (event.act == "WRITE") {
             var term = this.terminals[event.term];
             term.write(event.data);
@@ -164,6 +164,7 @@ PIAS.Player.prototype.dispatchNextEvent = function() {
 
 PIAS.Player.prototype.handleKeyPress = function(c) {
     var self = this;
+    var moveToNextEvent = function() { self.moveToNextEvent(); }
     if(this.current_event < this.events.length) {
         var event = this.events[this.current_event];
         if(event.act == "OPEN" && this.isWaypointChar(c)) {
@@ -181,6 +182,9 @@ PIAS.Player.prototype.handleKeyPress = function(c) {
             delete this.terminals[event.term];
             term.close();
             this.moveToNextEvent();
+        } else if (event.act == "RESIZE" && this.isWaypointChar(c)) {
+            var term = this.terminals[event.term];
+            term.resize(event.size, moveToNextEvent);
         } else if(event.act == "READ") {
             if(this.isWaypointChar(c)) {
                 this.moveToNextEvent();
@@ -222,9 +226,6 @@ PIAS.Player.prototype.resize = function() {
 
 PIAS.Terminal = function(player, size, cb) {
     var self = this;
-    if(!size) {
-        size = [80, 24];
-    }
     this.player = player;
     var frame_source = PIAS.get_resource_url("terminal/terminal.html");
     this.frame = $("<iframe src='" + frame_source + "'/>");
@@ -235,12 +236,9 @@ PIAS.Terminal = function(player, size, cb) {
       scope: "pias",
       onReady: function() {
           self.channel.bind("initialized", function(trans, dims) {
-              // Resize the terminal to the desired size.
-              var incr_w = (size[0] - dims.terminalWidth) * dims.cursorWidth;
-              var incr_h = (size[1] - dims.terminalHeight) * dims.cursorHeight;
-              self.frame.width(self.frame.width() + incr_w);
-              self.frame.height(self.frame.height() + incr_h);
-              cb(null, self);
+              self.resize(size || [80, 24], function(err) {
+                  cb(err, self);
+              });
           });
       }
     });
@@ -249,6 +247,18 @@ PIAS.Terminal = function(player, size, cb) {
 
 PIAS.Terminal.prototype.write = function(data) {
     this.channel.notify({ method: "write", params: data });
+}
+
+
+PIAS.Terminal.prototype.resize = function(size, cb) {
+    var self = this;
+    this.channel.call({method: "getsize", error: cb, success: function(d) {
+        var incr_w = (size[0] - d.terminalWidth) * d.cursorWidth;
+        var incr_h = (size[1] - d.terminalHeight) * d.cursorHeight;
+        self.frame.width(self.frame.width() + incr_w);
+        self.frame.height(self.frame.height() + incr_h);
+        cb(null);
+    }});
 }
 
 

@@ -9,7 +9,7 @@
 
   <link rel="stylesheet" href="./resources/deck-js/core/deck.core.css">
   <link rel="stylesheet" href="./resources/deck-js/extensions/hash/deck.hash.css">
-  <link rel="stylesheet" href="./resources/deck-js/themes/style/swiss.css">
+  <link rel="stylesheet" href="./resources/deck-js/themes/style/rfkelly.css">
   <link rel="stylesheet" href="./resources/deck-js/themes/transition/vertical-slide.css">
   <link rel="stylesheet" href="./resources/playitagainsam-js/playitagainsam.css">
 
@@ -30,14 +30,24 @@
   <h1>Testing Your Web API</h1>
 </section>
 
-<section class="slide">
+<section class="slide" id="qa-plot-slide">
   <h2>Quality Assurance</h2>
-  <table>
-  <tr><td style="vertical-align:middle;">quality</td><td>
+  <table id="qa-plot-container">
+  <tr><td colspan="2" style="text-align:center">&nbsp;</td></tr>
+  <tr><td colspan="2" style="text-align:center">&nbsp;</td></tr>
+  <tr><td style="vertical-align:middle;">quality&nbsp;</td><td>
     <div id="qa-plot" style="width:800px;height:400px"></div>
   </td></tr><tr><td colspan="2" style="text-align:center">effort</td></tr>
   </table>
   <script type="text/javascript">
+  $(document).bind("deck.change", function(event, from, to) {
+      if($.deck("getSlide", to).get(0) != $("#qa-plot-slide").get(0)) {
+          return;
+      }
+      $("#qa-plot-container").position({
+          my: "center", at: "center", of: $("#qa-plot-slide")
+      });
+  });
   $(function() {
       var plot = $("#qa-plot")
       var highlights = [];
@@ -48,8 +58,8 @@
       var redraw = function() {
          var series = []
          var data = [];
-         for (var i=0; i<30; i=i+0.5) {
-            data[i] = [i, func(i)];
+         for (var i=0; i<30; i=i+0.2) {
+            data.push([i, func(i)]);
          }
          series.push(data);
          for(var i=0; i<highlights.length; i++) {

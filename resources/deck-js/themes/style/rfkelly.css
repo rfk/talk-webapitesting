@@ -1,0 +1,10 @@
+
+@import url("swiss.css");
+
+.deck-container .slide h1 {
+  font-size: 4em;
+}
+
+.deck-container .slide h2 {
+  font-size: 2em;
+}

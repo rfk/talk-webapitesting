@@ -39,15 +39,7 @@
         onReady: function() {
             terminal = new VT100();
             terminal.keysPressed = function() {};
-            channel.notify({
-              method: "initialized",
-              params: {
-                  cursorWidth: terminal.cursorWidth,
-                  cursorHeight: terminal.cursorHeight,
-                  terminalWidth: terminal.terminalWidth,
-                  terminalHeight: terminal.terminalHeight,
-              }
-            });
+            channel.notify({ method: "initialized" });
         }
       });
     channel.bind("write", function(trans, data) {
@@ -64,6 +56,15 @@
         if(terminal) {
             terminal.blurCursor();
         }
+    });
+    channel.bind("getsize", function(trans, data) {
+         var dims = {
+             cursorWidth: terminal.cursorWidth,
+             cursorHeight: terminal.cursorHeight,
+             terminalWidth: terminal.terminalWidth,
+             terminalHeight: terminal.terminalHeight,
+         }
+         return dims;
     });
 
     </script>
