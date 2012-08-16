@@ -17,6 +17,15 @@
   body .pias-container {
     margin: 1em;
   }
+  .deck-container table {
+    border-collapse: collapse;
+  }
+  .deck-container table td {
+    padding: 0.5em;
+  }
+  .deck-container .slide iframe {
+    max-width: none;
+  }
   </style>
 
   <script src="./resources/deck-js/modernizr.custom.js"></script>
@@ -50,8 +59,11 @@
       }
   });
 
-  var writePIASSlide = function(id) {
+  var writePIASSlide = function(id, title) {
       document.write('<section class="slide" id="pias-' + id + '-slide">');
+      if(title) {
+          document.write('<h2>' + title + '</h2>');
+      }
       document.write('<div id="pias-' + id + '-player"></div>');
       document.write('<scr' + 'ipt type="text/javascript" src="./resources/pias-' + id + '.js"></scr' + 'ipt>');
       document.write('<scr' + 'ipt type="text/javascript">');
@@ -199,8 +211,23 @@
 
 
 <script type="text/javascript">
-  writePIASSlide("webtest-demo");
+  writePIASSlide("webtest-demo", "Driving a WSGI Application");
 </script>
+
+<script type="text/javascript">
+  writePIASSlide("webtest-script", "Writing Tests with WebTest");
+</script>
+
+
+<section class="slide">
+  <h2>WebTest</h2>
+  <ul>
+    <li>Human-friendly API for driving WSGI applications.</li>
+    <li>Good for functional tests; not so much for unit tests.</li>
+    <li>Low overhead.</li>
+  </ul>
+</section>
+
 
 <section class="slide">
   <h1>WSGIProxy</h1>
@@ -209,41 +236,102 @@
 
 <section class="slide">
   <h2>Like a Reverse WSGI Server</h2>
-  <p>WSGI Server:  HTTP Request --&gt; WSGI Call</p>
-  <p>WSGIProxy:  WSGI Call --&gt; HTTP Request</p>
+  <table>
+  <tr><td>WSGI Server:</td><td>HTTP Request</td><td>&rarr;</td><td>WSGI Call</td></tr>
+  <tr><td>WSGIProxy:</td><td>WSGI Call</td><td>&rarr;</td><td>HTTP Request</td></tr>
+  </table>
 </section>
 
 
 <script type="text/javascript">
-  writePIASSlide("wsgiproxy-demo");
+  writePIASSlide("wsgiproxy-demo", "Driving a Live Website");
+</script>
+
+
+<script type="text/javascript">
+  writePIASSlide("wsgiproxy-script", "A Live Test Runner");
 </script>
 
 
 <section class="slide">
-  <h2>Is this really that valuable?</h2>
-  <ul class="slide">
-   <li>Yes</li>
-   <ul class="slide">
-     <li>Plenty can go wrong during a deployment.</li>
-     <li>Plus you're basically getting it for free</li>
-   </ul>
+  <h2>WSGIProxy</h2>
+  <ul>
+    <li>Does one simple thing.</li>
+    <li>Does it well.</li>
+    <li>That thing is very useful.</li>
   </ul>
 </section>
+
+<section class="slide">
+  <h2>It's Deployment Test Script!</h2>
+  <ul>
+     <li>There's <i>plenty</i> that can go wrong during a deployment.</li>
+     <li>We just got a tool to detect it <i>for free</i>.</li>
+     <li>This could save your bacon!</li>
+  </ul>
+</section>
+
+
+<section class="slide">
+  <h2>It's a Load Test Framework!</h2>
+  <ul>
+     <li>Run a bunch of these in a tight loop.</li>
+     <li>Then see what breaks.</li>
+     <li>For a little more effort, we can get a lot more...</li>
+  </ul>
+</section>
+
 
 <section class="slide">
   <h1>FunkLoad</h1>
 </section>
 
+
+<script type="text/javascript">
+  writePIASSlide("funkload-standalone", "Standalone FunkLoad Tests");
+</script>
+
+
 <section class="slide">
-  <h1>Summing Up...</h>
+  <h1><a href="slides.html">Click Here to<br/>View Report</a></h1>
 </section>
+
+
+<script type="text/javascript">
+  writePIASSlide("funkload-webtest", "FunkLoad meets WebTest");
+</script>
+
+
+<script type="text/javascript">
+  writePIASSlide("funkload-diff-report", "FunkLoad Reporting");
+</script>
+
+
+<section class="slide">
+  <h1><a href="./slides.html">Click Here to<br/>View Report</a></h1>
+</section>
+
+
+<script type="text/javascript">
+  writePIASSlide("funkload-distributed", "FunkLoad Distributed Mode");
+</script>
+
+
+<section class="slide">
+  <h1>Summing Up</h1>
+</section>
+
 
 <section class="slide">
   <h2>It's not about specific tools</h2>
-  <p>WebTest --&gt; FunkLoad --&gt; Web Server</p>
-  <p>FunkLoad --&gt; WSGI-Intercept --&gt; In-Process WSGI APP</p>
-  <p>Find opportunities for re-use!</p>
-  <p>Think about your tools</p>
+  <table>
+  <tr><td>WebTest</td><td>&rarr;</td><td>FunkLoad</td><td>&rarr;</td><td>Web Server</td></tr>
+  <tr><td>FunkLoad</td><td>&rarr;</td><td>WSGI-Intercept</td><td>&rarr;</td><td>In-Process WSGI App</td></tr>
+  </table>
+
+  <p>Think about your tools.</p>
+  <p>Find opportunities for re-use.</p>
+
 </section>
 
 
@@ -265,5 +353,6 @@
   <p>http://pythonpaste.org/wsgiproxy</p>
   <p>http://funkload.nuxeo.org/</p>
 </section>
+
 </body>
 </html>
