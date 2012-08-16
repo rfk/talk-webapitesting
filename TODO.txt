@@ -1,0 +1,5 @@
+
+fix slow printing of funkload bench runs
+
+generate a good diff report
+
