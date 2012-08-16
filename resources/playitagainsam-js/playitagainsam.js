@@ -146,6 +146,7 @@ PIAS.Player.prototype.dispatchNextEvent = function() {
         }
     } else {
         var event = this.events[this.current_event];
+        // XXX TODO:  lots of writing and pausing with no reads in between
         if (event.act == "PAUSE") {
             setTimeout(moveToNextEvent, event.duration * 1000);
         } else if (event.act == "WRITE") {
