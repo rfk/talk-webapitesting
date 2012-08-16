@@ -1,5 +1,4 @@
 
-
 from funkload.FunkLoadTestCase import FunkLoadTestCase
 from funkload.utils import Data
 
@@ -20,25 +19,26 @@ class LoadTest(FunkLoadTestCase, TestSyncServer):
     def get_app(self):
         return TestApp(self.wsgi_to_funkload)
 
-
     def wsgi_to_funkload(self, environ, start_response):
+        # Get the target url from config.
         url = urlparse(self.conf_get("main", "url"))
+        # Set the request environ to match it.
         environ["HTTP_HOST"] = url.netloc
         environ["wsgi.urlscheme"] = url.scheme or "http"
         environ["SERVER_NAME"] = url.hostname
         req = Request(environ)
-        # Allow all response codes.
-        self.ok_codes = EVERYTHING()
         # Set headers based on the request.
         self.clearHeaders()
         for header, value in req.headers.iteritems():
             if header.lower() not in ("host",):
                 self.setHeader(header, value)
-        # Perform request with given data if any.
+        # Allow all response codes.
+        self.ok_codes = EVERYTHING()
+        # Perform request with given body data.
         data = Data(req.content_type, req.body)
-        response = self.method(req.method, req.url, data)
+        resp = self.method(req.method, req.url, data)
         # Report the response.
-        start_response("%d %s" % (response.code, response.message),
-                       response.headers.items())
-        return (response.body or "",)
+        status = "%d %s" % (resp.code, resp.message)
+        start_response(status, resp.headers.items())
+        return (resp.body or "",)
 

@@ -9,14 +9,18 @@ from funkload.utils import Data
 class LoadTest(FunkLoadTestCase):
 
     def test_post_then_get(self):
-        root = "/test_user_%d/bookmarks" % (random.randint(1, 10000))
+        userid = random.randint(1, 10000)
+        root = "/test_user_%d/bookmarks" % (userid,)
         url = self.conf_get("main", "url") + root
 
-        items = {
+        items = json.dumps({
             "test1": "TEST DATA",
             "test2": "MORE TEST DATA",
-        }
-        self.post(url, params=Data("application/json", json.dumps(items)))
+        })
+        params = Data("application/json", items)
+
+        self.setOkCodes([200])
+        self.post(url, params=params)
 
         r = self.get(url)
         items = json.loads(r.body)
