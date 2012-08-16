@@ -13,6 +13,12 @@
 
   <link rel="stylesheet" href="./resources/playitagainsam-js/playitagainsam.css">
 
+  <style type="text/css">
+  body .pias-container {
+    margin: 1em;
+  }
+  </style>
+
   <script src="./resources/deck-js/modernizr.custom.js"></script>
   <script src="./resources/deck-js/jquery-1.7.2.min.js"></script>
   <script src="./resources/flot/jquery.flot.js"></script>
@@ -21,6 +27,50 @@
   <script src="./resources/deck-js/extensions/hash/deck.hash.js"></script>
   <script src="./resources/playitagainsam-js/playitagainsam.js"></script>
 
+  <script type="text/javascript">
+  $(function() {
+      $.deck('.slide');
+  });
+
+  var onEnterSlideCallbacks = {}
+  var onEnterSlide = function(selector, cb) {
+      var slide_id = $(selector).attr("id");
+      if(typeof onEnterSlideCallbacks[slide_id] == "undefined") {
+          onEnterSlideCallbacks[slide_id] = [];
+      }
+      onEnterSlideCallbacks[slide_id].push(cb)
+  }
+  $(document).bind("deck.change", function(event, from, to) {
+      var slide_id = $.deck("getSlide", to).attr("id");
+      var callbacks = onEnterSlideCallbacks[slide_id];
+      if(typeof callbacks != "undefined") {
+          for(var i=0; i<callbacks.length; i++) {
+              callbacks[i]();
+          }
+      }
+  });
+
+  var writePIASSlide = function(id) {
+      document.write('<section class="slide" id="pias-' + id + '-slide">');
+      document.write('<div id="pias-' + id + '-player"></div>');
+      document.write('<scr' + 'ipt type="text/javascript" src="./resources/pias-' + id + '.js"></scr' + 'ipt>');
+      document.write('<scr' + 'ipt type="text/javascript">');
+      $(function() {
+          onEnterSlide("#pias-" + id + "-slide", function() {
+              var player = new PIAS.Player($("#pias-" + id + "-player"))
+              var varname = "pias_" + id + "_data";
+              while(varname != varname.replace("-", "_")) {
+                  varname = varname.replace("-", "_");
+              }
+              player.play(window[varname], function() {
+                  player.destroy();
+              });
+          });
+      });
+      document.write('</scr' + 'ipt>');
+      document.write('</section>');
+  }
+  </script>
 
 </head>
 <body class="deck-container">
@@ -53,15 +103,14 @@
   </td></tr><tr><td colspan="2" style="text-align:center">effort</td></tr>
   </table>
   <script type="text/javascript">
-  $(document).bind("deck.change", function(event, from, to) {
-      if($.deck("getSlide", to).get(0) != $("#qa-plot-slide").get(0)) {
-          return;
-      }
-      $("#qa-plot-container").position({
-          my: "center", at: "center", of: $("#qa-plot-slide")
-      });
-  });
   $(function() {
+
+      onEnterSlide("#qa-plot-slide", function() {
+          $("#qa-plot-container").position({
+              my: "center", at: "center", of: $("#qa-plot-slide")
+          });
+      });
+
       var plot = $("#qa-plot")
       var highlights = [];
       var slope = 0.2;
@@ -149,13 +198,9 @@
 </section>
 
 
-<section class="slide">
-    <div id="pias1"></div>
-    <script type="text/javascript" src="./resources/pias-session-1.js"></script>
-    <script type="text/javascript">
-      new PIAS.Player($("#pias1")).play(pias_data);
-    </script>
-</section>
+<script type="text/javascript">
+  writePIASSlide("webtest-demo");
+</script>
 
 <section class="slide">
   <h1>WSGIProxy</h1>
@@ -168,13 +213,10 @@
   <p>WSGIProxy:  WSGI Call --&gt; HTTP Request</p>
 </section>
 
-<section class="slide">
-    <div id="pias2"></div>
-    <script type="text/javascript" src="./resources/pias-session-2.js"></script>
-    <script type="text/javascript">
-      new PIAS.Player($("#pias2")).play(pias_data);
-    </script>
-</section>
+
+<script type="text/javascript">
+  writePIASSlide("wsgiproxy-demo");
+</script>
 
 
 <section class="slide">
@@ -223,12 +265,5 @@
   <p>http://pythonpaste.org/wsgiproxy</p>
   <p>http://funkload.nuxeo.org/</p>
 </section>
-
-
-<script>
-$(function() {
-    $.deck('.slide');
-});
-</script>
 </body>
 </html>

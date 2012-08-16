@@ -1,4 +1,4 @@
-var pias_data = {
+var pias_webtest_demo_data = {
   "events": [
     {
       "act": "OPEN", 

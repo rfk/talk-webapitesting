@@ -48,6 +48,7 @@ if(typeof Channel === "undefined") {
 PIAS.Player = function (container) {
     var self = this;
     this.container = $(container);
+    this.container.empty();
     this.events = [];
     this.current_event = 0;
     this.done_callback = null;
@@ -71,6 +72,9 @@ PIAS.Player.prototype.play = function(datasource, cb) {
     this.events = [];
     this.current_event = 0;
     this.done_callback = null;
+    for(var termid in this.terminals) {
+        this.terminals[termid].close();
+    }
     var mycb = function(err) {
         if(err) {
             if(cb) { cb(err); }
@@ -225,6 +229,14 @@ PIAS.Player.prototype.resize = function() {
     });
     this.overlay.width(this.container.width());
     this.overlay.height(this.container.height());
+}
+
+
+PIAS.Player.prototype.destroy = function() {
+    for(var termid in this.terminals) {
+        this.terminals[termid].close();
+    }
+    this.container.empty();
 }
 
 
