@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="./resources/deck-js/core/deck.core.css">
   <link rel="stylesheet" href="./resources/deck-js/extensions/hash/deck.hash.css">
   <link rel="stylesheet" href="./resources/deck-js/themes/style/rfkelly.css">
-  <link rel="stylesheet" href="./resources/deck-js/themes/transition/vertical-slide.css">
+
   <link rel="stylesheet" href="./resources/playitagainsam-js/playitagainsam.css">
 
   <script src="./resources/deck-js/modernizr.custom.js"></script>
@@ -29,6 +29,19 @@
   <h2>The Lazy Dev's Guide to...</h2>  
   <h1>Testing Your Web API</h1>
 </section>
+
+
+<section class="slide">
+  <h2>Is this you?</h2>
+  <h1>I Love Testing!</h1>
+</section>
+
+
+<section class="slide">
+  <h2>Is this you?</h2>
+  <h1>I Hate Testing!</h1>
+</section>
+
 
 <section class="slide" id="qa-plot-slide">
   <h2>Quality Assurance</h2>
@@ -102,40 +115,39 @@
   </script>
 </section>
 
+
+<section class="slide">
+  <h1>Do More<br/>With Less</h1>
+</section>
+
 <section class="slide">
   <h2>Pro-Active Laziness</h2>
-  <p>Victor Tugelbend was the laziest person in the history of the world.  Not simply, ordinary lazy.  Ordinary laziness was merely the absence of effort. [...] He put more effort into avoiding work than most people put into hard labour.</p>
-  <p>Having to haul around extra poundage was far too much effort, so he saw to it that he never put it on.</p>
+  <div class="slide">
+  <img src="./resources/images/Moving-pictures-cover.jpg" style="float: left; margin: 2em;" />
+  <blockquote>&nbsp;</blockquote>
+  <blockquote>"Victor Tugelbend was the laziest person in the history of the world."</blockquote>
+  <blockquote>"Not simply, ordinarily lazy.  Ordinary laziness was merely the absence of effort."</blockquote>
+  <blockquote>"He put more effort into avoiding work than most people put into hard labour."</blockquote>
+  </div>
 </section>
 
 <section class="slide">
-  <h2>Who Am I?</h2>
-
+  <h2>What do I know anyway?</h2>
  <ul>
-   <li>~1 year with Mozilla Services</li>
-   <li>Firefox Sync Server</li>
-   <li>Lots more in the pipe</li>
+   <li>Mozilla Services</li>
+   <ul><li>Firefox Sync Server</li></ul>
+   <li>Going to show the tools we use</li>
+   <ul><li>Some of this is stuff we already do</li>
+      <li>Some is stuff I want to try out</li></ul>
+   <li>I'm an enthusiast, not an expert</li>
  </ul>
-
- <ul class="slide">
-   <li>Some of this is stuff we already do</li>
-   <li>Some is stuff I want to try</li>
- </ul>
-
 </section>
 
-<section class="slide">
-  <h1>A Simple Web API</h1>
-</section>
-
-<section class="slide">
-  <h2>A Simple Web API</h2>
-  <p>This will be a "lite" version of the FF sync server.</p>
-</section>
 
 <section class="slide">
   <h1>WebTest</h1>
 </section>
+
 
 <section class="slide">
     <div id="pias1"></div>
@@ -149,6 +161,13 @@
   <h1>WSGIProxy</h1>
 </section>
 
+
+<section class="slide">
+  <h2>Like a Reverse WSGI Server</h2>
+  <p>WSGI Server:  HTTP Request --&gt; WSGI Call</p>
+  <p>WSGIProxy:  WSGI Call --&gt; HTTP Request</p>
+</section>
+
 <section class="slide">
     <div id="pias2"></div>
     <script type="text/javascript" src="./resources/pias-session-2.js"></script>
@@ -157,14 +176,54 @@
     </script>
 </section>
 
+
+<section class="slide">
+  <h2>Is this really that valuable?</h2>
+  <ul class="slide">
+   <li>Yes</li>
+   <ul class="slide">
+     <li>Plenty can go wrong during a deployment.</li>
+     <li>Plus you're basically getting it for free</li>
+   </ul>
+  </ul>
+</section>
+
 <section class="slide">
   <h1>FunkLoad</h1>
 </section>
 
 <section class="slide">
-  <h2>Notes</h2>
-  <p>Pro-Active laziness, Victor Tugelbend from "Moving Pictures" by terry pratchet.</p>
+  <h1>Summing Up...</h>
 </section>
+
+<section class="slide">
+  <h2>It's not about specific tools</h2>
+  <p>WebTest --&gt; FunkLoad --&gt; Web Server</p>
+  <p>FunkLoad --&gt; WSGI-Intercept --&gt; In-Process WSGI APP</p>
+  <p>Find opportunities for re-use!</p>
+  <p>Think about your tools</p>
+</section>
+
+
+<section class="slide">
+  <h2>Thanks</h2>
+  <ul>
+   <li>Tarek Ziade</li>
+   <li>James Bonacci</li>
+  </ul>
+</section>
+
+
+<section class="slide">
+  <h2>More Info</h2>
+  <p>ryan@rfk.id.au</p>
+  <p>https://github.com/rfk/talk-webapitesting</p>
+
+  <p>http://webtest.pythonpaste.org</p>
+  <p>http://pythonpaste.org/wsgiproxy</p>
+  <p>http://funkload.nuxeo.org/</p>
+</section>
+
 
 <script>
 $(function() {

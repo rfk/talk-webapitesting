@@ -8,3 +8,9 @@
 .deck-container .slide h2 {
   font-size: 2em;
 }
+
+.deck-container .slide blockquote {
+  font-size: 1em;
+  padding: 0em;
+  border: none;
+}
