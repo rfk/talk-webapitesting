@@ -10,7 +10,7 @@ from bottle import Bottle, request, response, run
 application = Bottle(catchall=False)
 
 
-db = sqlite3.connect("/tmp/sync.db")
+db = sqlite3.connect(":memory:") #"/tmp/sync.db")
 
 db.execute("CREATE TABLE IF NOT EXISTS items ("\
            "   username STRING NOT NULL, "\
@@ -24,7 +24,7 @@ db.execute("CREATE TABLE IF NOT EXISTS items ("\
 @application.post("/<username>/<collection>")
 def post_collection(username, collection):
 
-    query = "INSERT INTO items VALUES "\
+    query = "INSERT OR REPLACE INTO items VALUES "\
             "(:username, :collection, :item, :payload, :modified) "
 
     modified = int(time.time() * 1000000)

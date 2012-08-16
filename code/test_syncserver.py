@@ -3,20 +3,20 @@ import unittest
 import random
 import json
 
+import syncserver
+
 from webtest import TestApp
 
 
 class TestSyncServer(unittest.TestCase):
 
-    def make_wsgi_app(self):
-        from syncserver import application
-        return application
+    def get_app(self):
+        return TestApp(syncserver.application)
 
     def setUp(self):
-        self.app = TestApp(self.make_wsgi_app(), extra_environ={
-            "REMOTE_ADDR": "127.0.0.1",
-        })
         self.root = "/test_user_%d/bookmarks" % (random.randint(1, 10000))
+
+        self.app = self.get_app()
         self.app.delete(self.root)
 
     def test_post_then_get(self):
@@ -60,7 +60,10 @@ if __name__ == "__main__":
 
     class LiveTestSyncServer(TestSyncServer):
 
-        def make_wsgi_app(self):
-            return WSGIProxyApp(sys.argv[1])
+        def get_app(self):
+            application = WSGIProxyApp(sys.argv[1])
+            return TestApp(application, extra_environ={
+                "REMOTE_ADDR": "1.2.3.4"
+            })
 
     nose.main(suite=unittest.makeSuite(LiveTestSyncServer))
