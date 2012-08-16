@@ -2,7 +2,8 @@ var pias_data = {
   "events": [
     {
       "act": "OPEN", 
-      "term": "96d0f606a80947aea413b5637500cc9b"
+      "term": "96d0f606a80947aea413b5637500cc9b",
+      "size": [60, 30]
     }, 
     {
       "act": "PAUSE", 
@@ -52,7 +53,8 @@ var pias_data = {
     }, 
     {
       "act": "OPEN", 
-      "term": "5ead92d692c14400b4e35fdea4443796"
+      "term": "5ead92d692c14400b4e35fdea4443796",
+      "size": [60, 30]
     }, 
     {
       "act": "WRITE", 

@@ -133,7 +133,6 @@ PIAS.Player.prototype.loadEvents = function(events, cb) {
 
 
 PIAS.Player.prototype.dispatchNextEvent = function() {
-    console.log(["DISPATCH"]);
     var self = this;
     if(this.current_event >= this.events.length) {
         if(this.done_callback) {
@@ -149,20 +148,28 @@ PIAS.Player.prototype.dispatchNextEvent = function() {
             var term = this.terminals[event.term];
             term.write(event.data);
             this.moveToNextEvent();
+        } else if (event.act == "READ") {
+            // Transfer the cursor to the desired terminal.
+            for(var termid in this.terminals) {
+                if(termid == event.term) {
+                    this.terminals[termid].focus();
+                } else {
+                    this.terminals[termid].blur();
+                }
+            }
         }
     }
 }
 
 
 PIAS.Player.prototype.handleKeyPress = function(c) {
-    console.log(["KEYPRESS", c]);
     var self = this;
     if(this.current_event < this.events.length) {
         var event = this.events[this.current_event];
         if(event.act == "OPEN" && this.isWaypointChar(c)) {
             if(!self.terminals[event.term]) {
                 self.terminals[event.term] = true;
-                new PIAS.Terminal(this, function(err, term) {
+                new PIAS.Terminal(this, event.size, function(err, term) {
                     self.terminals[event.term] = term;
                     self.resize();
                     self.overlay[0].focus();
@@ -213,25 +220,24 @@ PIAS.Player.prototype.resize = function() {
 }
 
 
-PIAS.Terminal = function(player, cb) {
+PIAS.Terminal = function(player, size, cb) {
     var self = this;
+    if(!size) {
+        size = [80, 24];
+    }
     this.player = player;
     var frame_source = PIAS.get_resource_url("terminal/terminal.html");
-    this.frame = $("<iframe src='" + frame_source + "' width='800' height='240' />").appendTo(player.container);
+    this.frame = $("<iframe src='" + frame_source + "'/>");
+    this.frame.appendTo(player.container);
     this.channel = Channel.build({
       window: this.frame[0].contentWindow,
       origin: "*",
       scope: "pias",
       onReady: function() {
-          self.channel.bind("keysPressed", function(trans, chars) {
-              for(var j=0; j<chars.length; j++) {
-                  self.player.handleKeyPress(chars.charAt(j));
-              }
-          });
           self.channel.bind("initialized", function(trans, dims) {
-              // Resize the terminal so it's 80 by 24.
-              var incr_w = (80 - dims.terminalWidth) * dims.cursorWidth;
-              var incr_h = (24 - dims.terminalHeight) * dims.cursorHeight;
+              // Resize the terminal to the desired size.
+              var incr_w = (size[0] - dims.terminalWidth) * dims.cursorWidth;
+              var incr_h = (size[1] - dims.terminalHeight) * dims.cursorHeight;
               self.frame.width(self.frame.width() + incr_w);
               self.frame.height(self.frame.height() + incr_h);
               cb(null, self);
@@ -242,8 +248,17 @@ PIAS.Terminal = function(player, cb) {
 
 
 PIAS.Terminal.prototype.write = function(data) {
-    console.log(["WRITE", data]);
     this.channel.notify({ method: "write", params: data });
+}
+
+
+PIAS.Terminal.prototype.focus = function() {
+    this.channel.notify({ method: "focus" });
+}
+
+
+PIAS.Terminal.prototype.blur = function() {
+    this.channel.notify({ method: "blur" });
 }
 
 

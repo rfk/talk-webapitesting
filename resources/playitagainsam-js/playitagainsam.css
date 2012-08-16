@@ -10,6 +10,7 @@ input.pias-overlay {
 }
 
 body .pias-container iframe {
+  display: inline-block;
   border: 1px solid black;
   margin: 2px;
 }
