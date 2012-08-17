@@ -26,6 +26,23 @@
   .deck-container .slide iframe {
     max-width: none;
   }
+  .deck-container div.run-timer {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    background: black;
+    height: 5px;
+    width: 20px;
+  }
+  .deck-container div.run-timer-toofast {
+    background: blue;
+  }
+  .deck-container div.run-timer-ontrack {
+    background: green;
+  }
+  .deck-container div.run-timer-tooslow {
+    background: red;
+  }
   </style>
 
   <script src="./resources/deck-js/modernizr.custom.js"></script>
@@ -59,7 +76,42 @@
       }
   });
 
-  var writePIASSlide = function(id, title) {
+  var showStartTime = null;
+  $(function() {
+      onEnterSlide("#love-testing", function() {
+          if(showStartTime == null) {
+              showStartTime = Math.round((new Date()).getTime() / 1000);
+              updateShowTimers();
+          }
+      });
+  });
+  var updateShowTimers = function() {
+      if(showStartTime != null) {
+          var now = Math.round((new Date()).getTime() / 1000);
+          var runtime = now - showStartTime
+          $(".run-timer").each(function() {
+              var $this = $(this);
+              var times = $this.attr("id").split("-").slice(1,3);
+              if(runtime < parseInt(times[0], 10)) {
+                  $this.removeClass("run-timer-tooslow");
+                  $this.removeClass("run-timer-ontrack");
+                  $this.addClass("run-timer-toofast");
+              } else if(runtime > parseInt(times[1], 10)) {
+                  $this.removeClass("run-timer-toofast");
+                  $this.removeClass("run-timer-ontrack");
+                  $this.addClass("run-timer-tooslow");
+              } else {
+                  $this.removeClass("run-timer-toofast");
+                  $this.removeClass("run-timer-tooslow");
+                  $this.addClass("run-timer-ontrack");
+              }
+          });
+      }
+      setTimeout(updateShowTimers, 5 * 1000);
+  }
+  updateShowTimers();
+
+  var writePIASSlide = function(id, title, rtStart, rtEnd) {
       document.write('<section class="slide" id="pias-' + id + '-slide">');
       if(title) {
           document.write('<h2>' + title + '</h2>');
@@ -80,6 +132,10 @@
           });
       });
       document.write('</scr' + 'ipt>');
+      if(rtStart && rtEnd) {
+          document.write('<div class="run-timer" id="runtime-' + rtStart + '-' + rtEnd + '"> ');
+          document.write('</div>');
+      }
       document.write('</section>');
   }
   </script>
@@ -87,19 +143,19 @@
 </head>
 <body class="deck-container">
 
-<section class="slide">
+<section class="slide" id="title">
   <h2>The Lazy Dev's Guide to...</h2>  
   <h1>Testing Your Web API</h1>
 </section>
 
 
-<section class="slide">
+<section class="slide" id="love-testing">
   <h2>Is this you?</h2>
   <h1>I Love Testing!</h1>
 </section>
 
 
-<section class="slide">
+<section class="slide" id="hate-testing">
   <h2>Is this you?</h2>
   <h1>I Hate Testing!</h1>
 </section>
@@ -176,6 +232,7 @@
       });
   });
   </script>
+  <div class="run-timer" id="runtime-10-60"></div>
 </section>
 
 
@@ -192,6 +249,7 @@
   <blockquote>"Not simply, ordinarily lazy.  Ordinary laziness was merely the absence of effort."</blockquote>
   <blockquote>"He put more effort into avoiding work than most people put into hard labour."</blockquote>
   </div>
+  <div class="run-timer" id="runtime-60-120"></div>
 </section>
 
 <section class="slide">
@@ -204,6 +262,7 @@
       <li>Some is stuff I want to try out</li></ul>
    <li>I'm an enthusiast, not an expert</li>
  </ul>
+  <div class="run-timer" id="runtime-60-180"></div>
 </section>
 
 
@@ -213,11 +272,11 @@
 
 
 <script type="text/javascript">
-  writePIASSlide("webtest-demo", "Driving a WSGI Application");
+  writePIASSlide("webtest-demo", "Driving a WSGI Application", 180, 240);
 </script>
 
 <script type="text/javascript">
-  writePIASSlide("webtest-script", "Writing Tests with WebTest");
+  writePIASSlide("webtest-script", "Writing Tests with WebTest", 240, 420);
 </script>
 
 
@@ -228,6 +287,7 @@
     <li>Good for functional tests; not so much for unit tests.</li>
     <li>Low overhead.</li>
   </ul>
+  <div class="run-timer" id="runtime-420-480"></div>
 </section>
 
 
@@ -242,16 +302,17 @@
   <tr><td>WSGI Server:</td><td>HTTP Request</td><td>&rarr;</td><td>WSGI Call</td></tr>
   <tr><td>WSGIProxy:</td><td>WSGI Call</td><td>&rarr;</td><td>HTTP Request</td></tr>
   </table>
+  <div class="run-timer" id="runtime-480-510"></div>
 </section>
 
 
 <script type="text/javascript">
-  writePIASSlide("wsgiproxy-demo", "Driving a Live Website");
+  writePIASSlide("wsgiproxy-demo", "Driving a Live Website", 510, 570);
 </script>
 
 
 <script type="text/javascript">
-  writePIASSlide("wsgiproxy-script", "A Live Test Runner");
+  writePIASSlide("wsgiproxy-script", "A Live Test Runner", 570, 710);
 </script>
 
 
@@ -262,6 +323,7 @@
     <li>Does it well.</li>
     <li>That thing is very useful.</li>
   </ul>
+  <div class="run-timer" id="runtime-710-750"></div>
 </section>
 
 <section class="slide">
@@ -271,6 +333,7 @@
      <li>We just got a tool to detect it <i>for free</i>.</li>
      <li>This could save your bacon!</li>
   </ul>
+  <div class="run-timer" id="runtime-750-810"></div>
 </section>
 
 
@@ -281,6 +344,7 @@
      <li>Then see what breaks.</li>
      <li>For a little more effort, we can get a lot more...</li>
   </ul>
+  <div class="run-timer" id="runtime-810-850"></div>
 </section>
 
 
@@ -290,7 +354,7 @@
 
 
 <script type="text/javascript">
-  writePIASSlide("funkload-standalone", "Standalone FunkLoad Tests");
+  writePIASSlide("funkload-standalone", "Standalone FunkLoad Tests", 850, 1080);
 </script>
 
 
@@ -300,12 +364,12 @@
 
 
 <script type="text/javascript">
-  writePIASSlide("funkload-webtest", "FunkLoad meets WebTest");
+  writePIASSlide("funkload-webtest", "FunkLoad meets WebTest", 1080, 1200);
 </script>
 
 
 <script type="text/javascript">
-  writePIASSlide("funkload-diff-report", "FunkLoad Reporting");
+  writePIASSlide("funkload-diff-report", "Diff Reporting", 1200, 1230);
 </script>
 
 
@@ -315,7 +379,7 @@
 
 
 <script type="text/javascript">
-  writePIASSlide("funkload-distributed", "FunkLoad Distributed Mode");
+  writePIASSlide("funkload-distributed", "Distributed Mode", 1230, 1290);
 </script>
 
 
@@ -334,6 +398,7 @@
   <p>Think about your tools.</p>
   <p>Find opportunities for re-use.</p>
 
+  <div class="run-timer" id="runtime-1290-1470"></div>
 </section>
 
 
@@ -343,6 +408,7 @@
    <li>Tarek Ziade</li>
    <li>James Bonacci</li>
   </ul>
+  <div class="run-timer" id="runtime-1440-1470"></div>
 </section>
 
 
@@ -354,6 +420,7 @@
   <p>http://webtest.pythonpaste.org</p>
   <p>http://pythonpaste.org/wsgiproxy</p>
   <p>http://funkload.nuxeo.org/</p>
+  <div class="run-timer" id="runtime-1470-100000"></div>
 </section>
 
 </body>

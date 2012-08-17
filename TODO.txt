@@ -1,8 +1,8 @@
 
 generate a good diff report
 
-slide timer indicator
-
 make fonts a little bit smaller
 
 try to move terminals up from bottom of screen
+
+adjust timing data
