@@ -1861,6 +1861,16 @@ var pias_funkload_diff_report_data = {
     }, 
     {
       "act": "ECHO", 
+      "data": "\r", 
+      "term": "21e194bdbe114b9aa480ef8a0221e2a6"
+    }, 
+    {
+      "act": "WRITE", 
+      "data": "\nrfk@durian:pycon$ ", 
+      "term": "21e194bdbe114b9aa480ef8a0221e2a6"
+    }, 
+    {
+      "act": "ECHO", 
       "data": "fl-build-report -o html --html loadtest.xm", 
       "term": "21e194bdbe114b9aa480ef8a0221e2a6"
     }, 
