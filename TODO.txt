@@ -1,13 +1,9 @@
 
-generate a good diff report
-
 make fonts a little bit smaller?
 
 try to move terminals up from bottom of screen
 
-adjust timing data
-
-make flot lines be better colours
+adjust timing data?
 
 more motivational stuff in introduction
   "a demo, not a tutorial"

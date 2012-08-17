@@ -165,7 +165,6 @@
   <h2>Quality Assurance</h2>
   <table id="qa-plot-container">
   <tr><td colspan="2" style="text-align:center">&nbsp;</td></tr>
-  <tr><td colspan="2" style="text-align:center">&nbsp;</td></tr>
   <tr><td style="vertical-align:middle;">quality&nbsp;</td><td>
     <div id="qa-plot" style="width:800px;height:400px"></div>
   </td></tr><tr><td colspan="2" style="text-align:center">effort</td></tr>
@@ -177,6 +176,8 @@
           $("#qa-plot-container").position({
               my: "center", at: "center", of: $("#qa-plot-slide")
           });
+          highlights = [];
+          redraw();
       });
 
       var plot = $("#qa-plot")
@@ -191,12 +192,22 @@
          for (var i=0; i<30; i=i+0.2) {
             data.push([i, func(i)]);
          }
-         series.push(data);
+         series.push({
+             data: data,
+             color: "blue",
+             lines: { lineWidth: 5 }
+         });
          for(var i=0; i<highlights.length; i++) {
              var x = highlights[i].datapoint[0];
              var y = func(x);
-             series.push([[x, 0], [x, y]])
-             series.push([[0, y], [x, y]])
+             series.push({
+                 data: [[x, 0], [x, y]],
+                 color: "maroon",
+             });
+             series.push({
+                 data:[[0, y], [x, y]],
+                 color: "maroon",
+             });
          }
          $.plot(plot, series, {
            xaxis: { show: false },
