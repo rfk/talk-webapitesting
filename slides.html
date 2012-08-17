@@ -155,6 +155,7 @@
       plot.bind("mousedown", function() {
          is_dragging = true;
          did_drag = false;
+         $("#qa-plot-container").css("cursor", "move");
       });
       plot.bind("plothover", function(e, pos, item) {
           click_target = item;
@@ -165,6 +166,7 @@
           }
       });
       plot.bind("mouseup", function() {
+         $("#qa-plot-container").css("cursor", "default");
           is_dragging = false;
           if(!did_drag && click_target) {
              highlights.push(click_target);

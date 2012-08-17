@@ -3,3 +3,6 @@ fix slow printing of funkload bench runs
 
 generate a good diff report
 
+make fonts a little bit smaller
+
+try to move terminals up from bottom of screen
