@@ -1,0 +1,41 @@
+set output "/home/rfk/repos/talk-webapitesting/code/html/test_post_then_get-20120817T174813/pages_spps.png"
+set title "Successful Pages Per Second"
+set ylabel "Pages Per Second"
+set grid back
+set xrange [0:31]
+set terminal png size 640,540
+set format x ""
+set multiplot
+unset title
+unset xlabel
+set bmargin 0
+set lmargin 8
+set rmargin 9.5
+set key inside top
+set size 1, 0.6
+set origin 0, 0.4
+plot "/home/rfk/repos/talk-webapitesting/code/html/test_post_then_get-20120817T174813/pages.data" u 1:2 w linespoints lw 2 lt 2 t "SPPS"
+set boxwidth 0.8
+set style fill solid .7
+set ylabel "Apdex 1.5" 
+set yrange [0:1]
+set key outside top
+set size 1.0, 0.4
+set bmargin 3
+set format x "% g"
+set xlabel "Concurrent Users"
+set origin 0.0, 0.0
+plot "/home/rfk/repos/talk-webapitesting/code/html/test_post_then_get-20120817T174813/pages.data" u 1:12 w boxes lw 2 lt rgb "#99CDFF" t "E", "" u 1:13 w boxes lw 2 lt rgb "#00FF01" t "G", "" u 1:14 w boxes lw 2 lt rgb "#FFFF00" t "F", "" u 1:15 w boxes lw 2 lt rgb "#FF7C81" t "P", "" u 1:16 w boxes lw 2 lt rgb "#C0C0C0" t "U"
+unset boxwidth
+set key inside top
+unset yrange
+set autoscale y
+unset multiplot
+set size 1.0, 1.0
+unset rmargin
+set output "/home/rfk/repos/talk-webapitesting/code/html/test_post_then_get-20120817T174813/pages.png"
+set title "Pages Response time"
+set ylabel "Duration (s)"
+set bars 5.0
+set style fill solid .25
+plot "/home/rfk/repos/talk-webapitesting/code/html/test_post_then_get-20120817T174813/pages.data" u 1:8:8:10:9 t "med/p90/p95" w candlesticks lt 1 lw 1 whiskerbars 0.5, "" u 1:7:4:8:8 w candlesticks lt 2 lw 1 t "min/p10/med" whiskerbars 0.5, "" u 1:5 t "avg" w lines lt 3 lw 2

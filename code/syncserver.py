@@ -11,7 +11,8 @@ from bottle import Bottle, request, response, run
 application = Bottle(catchall=False)
 
 
-db = sqlite3.connect("/tmp/sync-%s.db" % (uuid4().hex,))
+#db = sqlite3.connect("/tmp/sync-%s.db" % (uuid4().hex,))
+db = sqlite3.connect(":memory:")
 
 db.execute("CREATE TABLE IF NOT EXISTS items ("\
            "   username STRING NOT NULL, "\
@@ -91,4 +92,4 @@ def delete_collection(username, collection):
 
 
 if __name__ == "__main__":
-    run(application, host="192.168.0.3", port=8080)
+    run(application, host="localhost", port=8080)

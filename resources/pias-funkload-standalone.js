@@ -7802,6 +7802,16 @@ var pias_funkload_standalone_data = {
     }, 
     {
       "act": "ECHO", 
+      "data": "\r", 
+      "term": "eefa42d508ba45e6a4c0bfb6f2a45655"
+    }, 
+    {
+      "act": "WRITE", 
+      "data": "\nrfk@durian:pycon$ ", 
+      "term": "eefa42d508ba45e6a4c0bfb6f2a45655"
+    }, 
+    {
+      "act": "ECHO", 
       "data": "fl-run-bench load", 
       "term": "eefa42d508ba45e6a4c0bfb6f2a45655"
     }, 
@@ -23597,6 +23607,16 @@ var pias_funkload_standalone_data = {
     {
       "act": "WRITE", 
       "data": "load_standalone.py   loadtest.xml\r\nload_standalone.pyc  loadtest.xml.bak-1345129749\r\nLoadTest.conf        syncserver.py\r\nloadtest.log         test_syncserver.py\r\nrfk@durian:pycon$ ", 
+      "term": "eefa42d508ba45e6a4c0bfb6f2a45655"
+    }, 
+    {
+      "act": "ECHO", 
+      "data": "\r", 
+      "term": "eefa42d508ba45e6a4c0bfb6f2a45655"
+    }, 
+    {
+      "act": "WRITE", 
+      "data": "\nrfk@durian:pycon$ ", 
       "term": "eefa42d508ba45e6a4c0bfb6f2a45655"
     }, 
     {

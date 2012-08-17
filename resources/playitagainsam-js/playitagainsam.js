@@ -113,6 +113,7 @@ PIAS.Player.prototype.loadEvents = function(events, cb) {
         var event = events[i];
         //  Decompose ECHO events into alternating READ/WRITE.
         //  Decompose READ events into individual characters.
+        //  Split WRITE events into sensible-sized chunks.
         if(event.act == "ECHO") {
             for(var j=0; j<event.data.length; j++) {
                 this.events.push({act: "READ",
@@ -128,6 +129,20 @@ PIAS.Player.prototype.loadEvents = function(events, cb) {
                                   term: event.term,
                                   data: event.data.charAt(j)})
             }
+        } else if(event.act == "WRITE") {
+            var max_write_size = 70;
+            if(event.data.length > max_write_size) {
+                console.log(["WRITE SIZE", event.data.length]);
+            }
+            while(event.data.length > max_write_size) {
+                this.events.push({act: "WRITE",
+                                  term: event.term,
+                                  data: event.data.substr(0, max_write_size)})
+                event.data = event.data.substr(max_write_size);
+            }
+            this.events.push({act: "WRITE",
+                              term: event.term,
+                              data: event.data})
         } else {
             this.events.push(event);
         }

@@ -10293,61 +10293,6 @@ var pias_funkload_webtest_data = {
       "term": "081460f2d14b4d299d093316e7a362d4"
     }, 
     {
-      "act": "ECHO", 
-      "data": "echo", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "READ", 
-      "data": "\u007f", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "WRITE", 
-      "data": "\b\u001b[K", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "READ", 
-      "data": "\u007f", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "WRITE", 
-      "data": "\b\u001b[K", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "READ", 
-      "data": "\u007f", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "WRITE", 
-      "data": "\b\u001b[K", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "READ", 
-      "data": "\u007f", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "WRITE", 
-      "data": "\b\u001b[K", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "READ", 
-      "data": "\u007f", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
-      "act": "WRITE", 
-      "data": "\u0007", 
-      "term": "081460f2d14b4d299d093316e7a362d4"
-    }, 
-    {
       "act": "RESIZE", 
       "size": [60, 7],
       "term": "081460f2d14b4d299d093316e7a362d4"
