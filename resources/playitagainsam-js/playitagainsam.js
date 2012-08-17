@@ -146,13 +146,16 @@ PIAS.Player.prototype.dispatchNextEvent = function() {
         }
     } else {
         var event = this.events[this.current_event];
-        // XXX TODO:  lots of writing and pausing with no reads in between
         if (event.act == "PAUSE") {
-            setTimeout(moveToNextEvent, event.duration * 1000);
+            var duration = Math.round(event.duration * 1000);
+            // Don't bother with tiny pauses, JS is laggy enough already.
+            if(duration < 10) {
+                duration = 1;
+            }
+            setTimeout(moveToNextEvent, duration);
         } else if (event.act == "WRITE") {
             var term = this.terminals[event.term];
-            term.write(event.data);
-            this.moveToNextEvent();
+            term.write(event.data, moveToNextEvent);
         } else if (event.act == "READ") {
             // Transfer the cursor to the desired terminal.
             for(var termid in this.terminals) {
@@ -262,8 +265,10 @@ PIAS.Terminal = function(player, size, cb) {
 }
 
 
-PIAS.Terminal.prototype.write = function(data) {
-    this.channel.notify({ method: "write", params: data });
+PIAS.Terminal.prototype.write = function(data, cb) {
+    this.channel.call({ method: "write", params: data, success: function() {
+        cb(null);
+    }});
 }
 
 

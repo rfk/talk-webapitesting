@@ -1,7 +1,7 @@
 
-fix slow printing of funkload bench runs
-
 generate a good diff report
+
+slide timer indicator
 
 make fonts a little bit smaller
 
