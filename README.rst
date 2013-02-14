@@ -13,3 +13,7 @@ ShareAlike 3.0 licence:
 The slide presentation is constructed from a variety of software that has a
 variety of open-source licenses applied.  The most restrictive such license is
 the GPL v2.  See individual code directories and files for details.
+
+You can see a live version of the slides at:
+
+   https://www.rfk.id.au/ramblings/talks/webapitesting/
